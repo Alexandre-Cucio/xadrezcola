@@ -1,0 +1,25 @@
+body {
+  display: grid;
+  place-items: center;
+  overflow-x: hidden;
+}
+
+ul {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.fileira{
+  display: flex;
+}
+
+li {
+  list-style: none;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+.casa {
+  margin: .5px;
+  width: 75px;
+  height: 75px;
+}

@@ -1,3 +1,7 @@
 # VSCode
 .vscode/*
+.hintrc
+
+# Angular
 xadrezcola-app/.angular/cache/*
+

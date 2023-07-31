@@ -16,9 +16,26 @@ export class TabuleiroComponent {
   movimentosValidos: string[] = [];
   pecasPretas: string[] = ['k', 'q', 'r', 'b', 'n', 'p'];
   pecasClaras: string[] = ['K', 'Q', 'R', 'B', 'N', 'P'];
-
   turnoDe: string = 'Brancas';
-  jogandoComo: string = 'Brancas'
+  jogandoComo: string = 'Brancas';
+  casasEscuras =
+    ['b8', 'd8', 'f8', 'h8'
+    , 'a7', 'c7', 'e7', 'g7'
+    , 'b6', 'd6', 'f6', 'h6'
+    , 'a5', 'c5', 'e5', 'g5'
+    , 'b4', 'd4', 'f4', 'h4'
+    , 'a3', 'c3', 'e3', 'g3'
+    , 'b2', 'd2', 'f2', 'h2'
+    , 'a1', 'c1', 'e1', 'g1'];
+  casasClaras =
+    ['a8', 'c8', 'e8', 'g8'
+    , 'b7', 'd7', 'f7', 'h7'
+    , 'a6', 'c6', 'e6', 'g6'
+    , 'b5', 'd5', 'f5', 'h5'
+    , 'a4', 'c4', 'e4', 'g4'
+    , 'b3', 'd3', 'f3', 'h3'
+    , 'a2', 'c2', 'e2', 'g2'
+    , 'b1', 'd1', 'f1', 'h1'];
 
   ngOnInit() {
     this.defineColunasFileiras();
@@ -40,35 +57,15 @@ export class TabuleiroComponent {
   }
 
   colorirCasas() {
-    const casasEscuras =
-      ['b8', 'd8', 'f8', 'h8'
-        , 'a7', 'c7', 'e7', 'g7'
-        , 'b6', 'd6', 'f6', 'h6'
-        , 'a5', 'c5', 'e5', 'g5'
-        , 'b4', 'd4', 'f4', 'h4'
-        , 'a3', 'c3', 'e3', 'g3'
-        , 'b2', 'd2', 'f2', 'h2'
-        , 'a1', 'c1', 'e1', 'g1'];
-
-    const casasClaras =
-      ['a8', 'c8', 'e8', 'g8'
-        , 'b7', 'd7', 'f7', 'h7'
-        , 'a6', 'c6', 'e6', 'g6'
-        , 'b5', 'd5', 'f5', 'h5'
-        , 'a4', 'c4', 'e4', 'g4'
-        , 'b3', 'd3', 'f3', 'h3'
-        , 'a2', 'c2', 'e2', 'g2'
-        , 'b1', 'd1', 'f1', 'h1'];
-
     const casas = document.querySelectorAll('.casa');
 
     casas.forEach((casa: Element) => {
-      if (casasClaras.includes(casa.id)) {
+      if (this.casasClaras.includes(casa.id)) {
         (casa as HTMLElement).style.backgroundColor = '#FFFFE0';
         (casa as HTMLElement).style.border = '';
       }
 
-      if (casasEscuras.includes(casa.id)) {
+      if (this.casasEscuras.includes(casa.id)) {
         (casa as HTMLElement).style.backgroundColor = '#008000';
         (casa as HTMLElement).style.border = '';
       }
@@ -148,9 +145,9 @@ export class TabuleiroComponent {
 
       this.movimentosValidos.forEach(casa => {
         const casaHtml = document.getElementById(casa);
-        (casaHtml as HTMLElement).style.borderStyle = 'solid'
+        (casaHtml as HTMLElement).style.backgroundColor = '#FFD700'
       } );
-      casa.style.backgroundColor = '#FFD700'       
+      casa.style.borderStyle = 'solid'
       
     } else { // Caso selecione uma casa diverente da selecionada
       console.log('Casa diverente selecionada!')
@@ -179,6 +176,12 @@ export class TabuleiroComponent {
         
       case 'p':
         return this.validaMovPeaoPreto(casaSelecionada.id);
+
+      case 'N':
+        return this.validaMovCavaloBranco(casaSelecionada.id);
+      
+      case 'n':
+        return this.validaMovCavaloPreto(casaSelecionada.id)
     }
 
     return [];
@@ -239,27 +242,43 @@ export class TabuleiroComponent {
   }
 
   // Validação de movimentos
-  
-  casaPossuiPecaBranca(casa: string){
-    const peca = this.retornoPecaPorCasa(casa);
 
-    return this.pecasClaras.includes(peca);
+  casaExiste(casa: string){
+    return this.casasClaras.includes(casa) || this.casasEscuras.includes(casa);
+  }
+
+  casaPossuiPecaBranca(casa: string){
+    if(this.casaExiste(casa)){
+      const peca = this.retornoPecaPorCasa(casa);
+
+      return this.pecasClaras.includes(peca);
+    }
+    
+    return false;
   }
 
   casaPossuiPecaPreta(casa: string){
-    const peca = this.retornoPecaPorCasa(casa);
+    if(this.casaExiste(casa)){
+      const peca = this.retornoPecaPorCasa(casa);
 
-    return this.pecasPretas.includes(peca);
+      return this.pecasPretas.includes(peca);
+    }
+    
+    return false;
   }
 
   casaPossuiPeca(casa: string){
-    return (this.casaPossuiPecaPreta(casa) || this.casaPossuiPecaBranca(casa));
+    if(this.casaExiste(casa)){
+      return ((this.casaPossuiPecaPreta(casa) || this.casaPossuiPecaBranca(casa)));
+    }
+    
+    return false;
   }
 
   // TODO: en-passant
+  // TODO: promotion
   validaMovPeaoBranco(casaOriginal: string): string[] {
     const movimentos = [];
-
     const colunaOriginal =  casaOriginal.charAt(0);
     const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
 
@@ -278,32 +297,28 @@ export class TabuleiroComponent {
     }
 
     // Capturar peças pretas nas Direita
-    if(colunaOriginal != 'h'){
-      // Converta 'a' para 'b' e assim por diante
-      const casaDiagonalDireita = (String.fromCharCode(casaOriginal.charCodeAt(0) + 1)) + (fileiraOriginal + 1)
+    // Converta 'a' para 'b' e assim por diante
+    const casaDiagonalDireita = (String.fromCharCode(casaOriginal.charCodeAt(0) + 1)) + (fileiraOriginal + 1)
       
-      if(this.casaPossuiPecaPreta(casaDiagonalDireita)){
-        movimentos.push(casaDiagonalDireita)
-      }
+    if(this.casaPossuiPecaPreta(casaDiagonalDireita)){
+      movimentos.push(casaDiagonalDireita)
     }
     
     // Capturar peças pretas nas Direita
-    if(colunaOriginal != 'a'){
-      // Converta 'h' para 'g' e assim por diante
-      const casaDiagonalEsquerda = (String.fromCharCode(casaOriginal.charCodeAt(0) - 1)) + (fileiraOriginal + 1)
+    // Converta 'h' para 'g' e assim por diante
+    const casaDiagonalEsquerda = (String.fromCharCode(casaOriginal.charCodeAt(0) - 1)) + (fileiraOriginal + 1)
       
-      if(this.casaPossuiPecaPreta(casaDiagonalEsquerda)){
-        movimentos.push(casaDiagonalEsquerda)
-      }
+    if(this.casaPossuiPecaPreta(casaDiagonalEsquerda)){
+      movimentos.push(casaDiagonalEsquerda)
     }
     
     return movimentos;
   }
 
   // TODO: en-passant
+  // TODO: promotion
   validaMovPeaoPreto(casaOriginal: string): string[] {
     const movimentos = [];
-
     const colunaOriginal =  casaOriginal.charAt(0);
     const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
 
@@ -322,25 +337,65 @@ export class TabuleiroComponent {
     }
 
     // Capturar peças pretas nas Direita
-    if(colunaOriginal != 'a'){
-      // Converta 'a' para 'b' e assim por diante
-      const casaDiagonalDireita = (String.fromCharCode(casaOriginal.charCodeAt(0) + 1)) + (fileiraOriginal - 1)
+    // Converta 'a' para 'b' e assim por diante
+    const casaDiagonalDireita = (String.fromCharCode(casaOriginal.charCodeAt(0) + 1)) + (fileiraOriginal - 1)
       
-      if(this.casaPossuiPecaBranca(casaDiagonalDireita)){
-        movimentos.push(casaDiagonalDireita)
-      }
+    if(this.casaPossuiPecaBranca(casaDiagonalDireita)){
+      movimentos.push(casaDiagonalDireita)
     }
     
     // Capturar peças pretas nas Direita
-    if(colunaOriginal != 'h'){
-      // Converta 'h' para 'g' e assim por diante
-      const casaDiagonalEsquerda = (String.fromCharCode(casaOriginal.charCodeAt(0) - 1)) + (fileiraOriginal - 1)
+    // Converta 'h' para 'g' e assim por diante
+    const casaDiagonalEsquerda = (String.fromCharCode(casaOriginal.charCodeAt(0) - 1)) + (fileiraOriginal - 1)
       
-      if(this.casaPossuiPecaBranca(casaDiagonalEsquerda)){
-        movimentos.push(casaDiagonalEsquerda)
-      }
+    if(this.casaPossuiPecaBranca(casaDiagonalEsquerda)){
+      movimentos.push(casaDiagonalEsquerda)
     }
     
+    return movimentos;
+  }
+
+  validaMovCavaloBranco(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+    
+    const possiveisMovimentos: [number, number][] = [
+      [2, 1], [2, -1], [-2, 1], [-2, -1],
+      [1, 2], [1, -2], [-1, 2], [-1, -2]
+    ];
+    
+    for (const [variavelColuna, variavelFileira] of possiveisMovimentos){
+      const colunaDestino = String.fromCharCode(colunaOriginal + variavelColuna);
+      const fileiraDestino = (fileiraOriginal + variavelFileira).toString();
+
+      if(this.casaExiste(colunaDestino + fileiraDestino) && !this.casaPossuiPecaBranca(colunaDestino + fileiraDestino)){
+        movimentos.push(colunaDestino + fileiraDestino);
+      }
+    }
+
+    return movimentos;
+  }
+
+  validaMovCavaloPreto(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+    
+    const possiveisMovimentos: [number, number][] = [
+      [2, 1], [2, -1], [-2, 1], [-2, -1],
+      [1, 2], [1, -2], [-1, 2], [-1, -2]
+    ];
+    
+    for (const [variavelColuna, variavelFileira] of possiveisMovimentos){
+      const colunaDestino = String.fromCharCode(colunaOriginal + variavelColuna);
+      const fileiraDestino = (fileiraOriginal + variavelFileira).toString();
+
+      if(this.casaExiste(colunaDestino + fileiraDestino) && !this.casaPossuiPecaPreta(colunaDestino + fileiraDestino)){
+        movimentos.push(colunaDestino + fileiraDestino);
+      }
+    }
+
     return movimentos;
   }
 }

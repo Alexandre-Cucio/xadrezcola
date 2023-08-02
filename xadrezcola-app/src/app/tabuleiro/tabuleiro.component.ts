@@ -181,7 +181,25 @@ export class TabuleiroComponent {
         return this.validaMovCavaloBranco(casaSelecionada.id);
       
       case 'n':
-        return this.validaMovCavaloPreto(casaSelecionada.id)
+        return this.validaMovCavaloPreto(casaSelecionada.id);
+      
+      case 'R':
+        return this.validaMovTorreBranca(casaSelecionada.id);
+
+      case 'r':
+          return this.validaMovTorrePreta(casaSelecionada.id);
+
+      case 'B':
+          return this.validaMovBispoBranco(casaSelecionada.id);
+      
+      case 'b':
+          return this.validaMovBispoPreto(casaSelecionada.id);
+
+      case 'Q':
+          return this.validaMovRainhaBranca(casaSelecionada.id);
+      
+      case 'q':
+          return this.validaMovRainhaPreta(casaSelecionada.id);
     }
 
     return [];
@@ -211,7 +229,7 @@ export class TabuleiroComponent {
       return false;
     }
 
-    return this.movimentosValidos.includes(casaDestino) ? true : false
+    return this.movimentosValidos.includes(casaDestino);
   
   }
 
@@ -398,4 +416,361 @@ export class TabuleiroComponent {
 
     return movimentos;
   }
+
+  validaMovTorreBranca(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+
+    // For (X,0)
+    for(let co = 1; co <= 8; co++){
+      const colunaFor = String.fromCharCode(colunaOriginal + co);
+      const casaFor = colunaFor + fileiraOriginal
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if(this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+
+      break;
+    }
+
+    // For (-X,0)
+    for(let co = -1; co >= -8; co--){
+      const colunaFor = String.fromCharCode(colunaOriginal + co);
+      const casaFor = colunaFor + fileiraOriginal
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if(this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+
+      break;
+    }
+
+    // For (0,Y)
+    for(let li = 1; li <= 8; li++){
+      const fileiraFor = fileiraOriginal + li;
+      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if(this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (0,-Y)
+    for(let li = -1; li <= -8; li--){ 
+      const fileiraFor = fileiraOriginal + li;
+      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if(this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    return movimentos;
+  }
+
+  validaMovTorrePreta(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+
+    // For (X,0)
+    for(let co = 1; co <= 8; co++){
+      const colunaFor = String.fromCharCode(colunaOriginal + co);
+      const casaFor = colunaFor + fileiraOriginal
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if(this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+
+      break;
+    }
+
+    // For (-X,0)
+    for(let co = -1; co >= -8; co--){
+      const colunaFor = String.fromCharCode(colunaOriginal + co);
+      const casaFor = colunaFor + fileiraOriginal
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if(this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+
+      break;
+    }
+
+    // For (0,Y)
+    for(let li = 1; li <= 8; li++){
+      const fileiraFor = fileiraOriginal + li;
+      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if(this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (0,-Y)
+    for(let li = -1; li <= -8; li--){
+      const fileiraFor = fileiraOriginal + li;
+      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if(this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    return movimentos;
+  }
+
+  validaMovBispoBranco(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+
+    // For (X,Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal + diag);
+      const fileiraFor = fileiraOriginal + diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if (this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (-X,Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal - diag);
+      const fileiraFor = fileiraOriginal + diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if (this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (X,-Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal + diag);
+      const fileiraFor = fileiraOriginal - diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if (this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (-X,-Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal - diag);
+      const fileiraFor = fileiraOriginal - diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
+        if (this.casaPossuiPecaPreta(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    return movimentos;
+  }
+
+  validaMovBispoPreto(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+
+    // For (X,Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal + diag);
+      const fileiraFor = fileiraOriginal + diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if (this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (-X,Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal - diag);
+      const fileiraFor = fileiraOriginal + diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if (this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (X,-Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal + diag);
+      const fileiraFor = fileiraOriginal - diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if (this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    // For (-X,-Y)
+    for(let diag = 1; diag <= 8; diag++){
+      const colunaFor = String.fromCharCode(colunaOriginal - diag);
+      const fileiraFor = fileiraOriginal - diag;
+      const casaFor = colunaFor + fileiraFor
+
+      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
+        if (this.casaPossuiPecaBranca(casaFor)){
+          movimentos.push(casaFor);
+          break;
+        }
+        
+        movimentos.push(casaFor);
+        continue;
+      }
+        
+      break;
+    }
+
+    return movimentos;
+  }
+
+  validaMovRainhaBranca(casaOriginal: string): string[]{
+    const movimentos = [];
+
+    for(const movimento of this.validaMovBispoBranco(casaOriginal)){
+      movimentos.push(movimento);
+    }
+
+    for(const movimento of this.validaMovTorreBranca(casaOriginal)){
+      movimentos.push(movimento);
+    }
+
+    return movimentos;
+  }
+
+  validaMovRainhaPreta(casaOriginal: string): string[]{
+    const movimentos = [];
+
+    for(const movimento of this.validaMovBispoPreto(casaOriginal)){
+      movimentos.push(movimento);
+    }
+
+    for(const movimento of this.validaMovTorreBranca(casaOriginal)){
+      movimentos.push(movimento);
+    }
+
+    return movimentos;
+  }
+
 }

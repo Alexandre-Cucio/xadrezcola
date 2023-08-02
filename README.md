@@ -14,32 +14,32 @@ Disponibilizar um meio de ensino de Xadrez para crianças que seja independente 
 
 ## Estrutura
 
-O projeto sera desenvolvido em 2 aplicações separadas:
-- Aplicação front-end em Angular onde o usuario irá interagir com o projeto
-- Aplicação back-end responsavel por interagir com o LLM e fazer o CRUD do projeto
+O projeto será desenvolvido em 2 aplicações separadas:
+- Aplicação front-end em Angular onde o usuário irá interagir com o projeto
+- Aplicação back-end responsável por interagir com o LLM e fazer o CRUD do projeto
 
 ## Progresso
 
 ### Front-end
 #### Tabuleiro de Xadrez
 - [x] Gerar Tabuleiro
-- [x] Tabuleiro Dinamico para Jogar com Pretas ou Brancas
+- [x] Tabuleiro Dinâmico para Jogar com Pretas ou Brancas
 - [x] Adicionar imagem das peças
-- [x] Valildar de qual Jogardor é o turno
 - [ ] Validar Estado do jogo por jogada
+    - [x] Avaliar de qual Jogador é o turno
     - [ ] Xeque
     - [ ] Xeque-Mate
     - [ ] Disponibilidade de Roque
-    - [ ] Gerar objeto de Estado do jogo para analise no back-end
+    - [ ] Gerar objeto de Estado do jogo para análise do back-end
 - [ ] Regras de Movimentos
-    - [x] Peões: Basico
+    - [x] Peões: Básico
     - [ ] Peões: en-passant
     - [ ] Peões: Promoção
     - [x] Cavalos
-    - [ ] Torres
-    - [ ] Bispos
-    - [ ] Rainha
-    - [ ] Rei: Basico
+    - [x] Torres
+    - [x] Bispos
+    - [x] Rainha
+    - [ ] Rei: Básico
     - [ ] Rei: Roque
 
 #### Interface

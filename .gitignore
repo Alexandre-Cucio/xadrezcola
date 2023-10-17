@@ -4,4 +4,7 @@
 
 # Angular
 xadrezcola-app/.angular/cache/*
-
+xadrezcola-app/node_modules/*
+xadrezcola-app/dist
+xadrezcola-app/tmp
+xadrezcola-app/out-tsc

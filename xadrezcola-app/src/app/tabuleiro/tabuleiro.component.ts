@@ -187,19 +187,23 @@ export class TabuleiroComponent {
         return this.validaMovTorreBranca(casaSelecionada.id);
 
       case 'r':
-          return this.validaMovTorrePreta(casaSelecionada.id);
+        return this.validaMovTorrePreta(casaSelecionada.id);
 
       case 'B':
-          return this.validaMovBispoBranco(casaSelecionada.id);
+        return this.validaMovBispoBranco(casaSelecionada.id);
       
       case 'b':
-          return this.validaMovBispoPreto(casaSelecionada.id);
+        return this.validaMovBispoPreto(casaSelecionada.id);
 
       case 'Q':
-          return this.validaMovRainhaBranca(casaSelecionada.id);
+        return this.validaMovRainhaBranca(casaSelecionada.id);
       
       case 'q':
-          return this.validaMovRainhaPreta(casaSelecionada.id);
+        return this.validaMovRainhaPreta(casaSelecionada.id);
+      
+      case 'K':
+        return this.validaMovReiBranco(casaSelecionada.id);
+
     }
 
     return [];
@@ -766,8 +770,36 @@ export class TabuleiroComponent {
       movimentos.push(movimento);
     }
 
-    for(const movimento of this.validaMovTorreBranca(casaOriginal)){
+    for(const movimento of this.validaMovTorrePreta(casaOriginal)){
       movimentos.push(movimento);
+    }
+
+    return movimentos;
+  }
+
+  validaMovReiBranco(casaOriginal: string): string[]{
+    const movimentos = [];
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+    
+    const possiveisMovimentos: [number, number][] = [
+      [-1, 1], [0, 1], [1, 1], [-1, 0],
+      [1,0], [-1,-1], [0, -1], [1, -1]
+    ];
+    
+    for (const [variavelColuna, variavelFileira] of possiveisMovimentos){
+      const colunaFor = String.fromCharCode(colunaOriginal + variavelColuna);
+      const fileiraFor = (fileiraOriginal + variavelFileira).toString();
+      const casaDestino = colunaFor + fileiraFor;
+
+      const ehValido = this.casaExiste(casaDestino) && !this.casaPossuiPecaBranca(casaDestino);
+      //const ehSeguro = this.validaSegurancaReiBrancoByCasa(casaDestino);
+
+      //if(ehValido && ehSeguro){
+      if(ehValido){
+        movimentos.push(casaDestino);
+      }
+
     }
 
     return movimentos;

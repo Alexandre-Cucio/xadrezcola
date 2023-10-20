@@ -2,9 +2,12 @@
 .vscode/*
 .hintrc
 
-# Angular
+# App
 xadrezcola-app/.angular/cache/*
 xadrezcola-app/node_modules/*
 xadrezcola-app/dist
 xadrezcola-app/tmp
 xadrezcola-app/out-tsc
+
+# Server
+xadrezcola-server/env

@@ -477,8 +477,8 @@ export class TabuleiroComponent {
     }
 
     // For (0,-Y)
-    for(let li = -1; li <= -8; li--){ 
-      const fileiraFor = fileiraOriginal + li;
+    for(let li = 1; li <= 8; li++){ 
+      const fileiraFor = fileiraOriginal - li;
       const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
 
       if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
@@ -557,8 +557,8 @@ export class TabuleiroComponent {
     }
 
     // For (0,-Y)
-    for(let li = -1; li <= -8; li--){
-      const fileiraFor = fileiraOriginal + li;
+    for(let li = 1; li <= 8; li++){
+      const fileiraFor = fileiraOriginal - li;
       const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
 
       if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){

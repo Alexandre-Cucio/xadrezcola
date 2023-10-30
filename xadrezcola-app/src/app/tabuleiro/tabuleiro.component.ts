@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { Torre } from './model/torre-model'
+import { CorDaPeca } from './model/enum/cor-da-peca-enum';
+import { Cavalo } from './model/cavalo-model';
+import { Bispo } from './model/bisbo-model';
+import { Rainha } from './model/rainha-model';
+import { Peao } from './model/peao-model';
 
 @Component({
   selector: 'app-tabuleiro',
@@ -10,7 +16,7 @@ export class TabuleiroComponent {
 
   colunas: string[] = [];
   fileiras: string[] = [];
-  
+
   estadoTabuleiro: any[][] = [];
   casaSelecionada: HTMLElement | null = null;
   movimentosValidos: string[] = [];
@@ -45,7 +51,7 @@ export class TabuleiroComponent {
     this.colorirCasas();
     this.resetaTabuleiro();
   }
-  
+
   defineColunasFileiras() {
     if(this.jogandoComo === 'Brancas'){
       this.colunas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -108,17 +114,18 @@ export class TabuleiroComponent {
     const imagens: { [key: string]: string } = {
       '': '',
       'k': 'assets/pecas/pretas-rei.png',
-      'q': 'assets/pecas/pretas-rainha.png',
-      'r': 'assets/pecas/pretas-torre.png',
-      'b': 'assets/pecas/pretas-bisbo.png',
-      'n': 'assets/pecas/pretas-cavalo.png',
-      'p': 'assets/pecas/pretas-peao.png',
+      'q': Rainha.getImgPeca(CorDaPeca.pretas),
+      'r': Torre.getImgPeca(CorDaPeca.pretas),
+      'b': Bispo.getImgPeca(CorDaPeca.pretas),
+      'n': Cavalo.getImgPeca(CorDaPeca.pretas),
+      'p': Peao.getImgPeca(CorDaPeca.pretas),
+
       'K': 'assets/pecas/brancas-rei.png',
-      'Q': 'assets/pecas/brancas-rainha.png',
-      'R': 'assets/pecas/brancas-torre.png',
-      'B': 'assets/pecas/brancas-bispo.png',
-      'N': 'assets/pecas/brancas-cavalo.png',
-      'P': 'assets/pecas/brancas-peao.png'
+      'Q': Rainha.getImgPeca(CorDaPeca.brancas),
+      'R': Torre.getImgPeca(CorDaPeca.brancas),
+      'B': Bispo.getImgPeca(CorDaPeca.brancas),
+      'N': Cavalo.getImgPeca(CorDaPeca.brancas),
+      'P': Peao.getImgPeca(CorDaPeca.pretas)
     };
 
     return imagens[peca];
@@ -378,403 +385,35 @@ export class TabuleiroComponent {
   }
 
   validaMovCavaloBranco(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-    
-    const possiveisMovimentos: [number, number][] = [
-      [2, 1], [2, -1], [-2, 1], [-2, -1],
-      [1, 2], [1, -2], [-1, 2], [-1, -2]
-    ];
-    
-    for (const [variavelColuna, variavelFileira] of possiveisMovimentos){
-      const colunaDestino = String.fromCharCode(colunaOriginal + variavelColuna);
-      const fileiraDestino = (fileiraOriginal + variavelFileira).toString();
-
-      if(this.casaExiste(colunaDestino + fileiraDestino) && !this.casaPossuiPecaBranca(colunaDestino + fileiraDestino)){
-        movimentos.push(colunaDestino + fileiraDestino);
-      }
-    }
-
-    return movimentos;
+    return Cavalo.getMovValidos(CorDaPeca.brancas, casaOriginal, this.estadoTabuleiro)
   }
 
   validaMovCavaloPreto(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-    
-    const possiveisMovimentos: [number, number][] = [
-      [2, 1], [2, -1], [-2, 1], [-2, -1],
-      [1, 2], [1, -2], [-1, 2], [-1, -2]
-    ];
-    
-    for (const [variavelColuna, variavelFileira] of possiveisMovimentos){
-      const colunaDestino = String.fromCharCode(colunaOriginal + variavelColuna);
-      const fileiraDestino = (fileiraOriginal + variavelFileira).toString();
-
-      if(this.casaExiste(colunaDestino + fileiraDestino) && !this.casaPossuiPecaPreta(colunaDestino + fileiraDestino)){
-        movimentos.push(colunaDestino + fileiraDestino);
-      }
-    }
-
-    return movimentos;
+    return Cavalo.getMovValidos(CorDaPeca.pretas , casaOriginal, this.estadoTabuleiro)
   }
 
   validaMovTorreBranca(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-
-    // For (X,0)
-    for(let co = 1; co <= 8; co++){
-      const colunaFor = String.fromCharCode(colunaOriginal + co);
-      const casaFor = colunaFor + fileiraOriginal
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if(this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-
-      break;
-    }
-
-    // For (-X,0)
-    for(let co = -1; co >= -8; co--){
-      const colunaFor = String.fromCharCode(colunaOriginal + co);
-      const casaFor = colunaFor + fileiraOriginal
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if(this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-
-      break;
-    }
-
-    // For (0,Y)
-    for(let li = 1; li <= 8; li++){
-      const fileiraFor = fileiraOriginal + li;
-      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if(this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (0,-Y)
-    for(let li = 1; li <= 8; li++){ 
-      const fileiraFor = fileiraOriginal - li;
-      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if(this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    return movimentos;
+    return Torre.getMovValidos(CorDaPeca.brancas, casaOriginal, this.estadoTabuleiro)
   }
 
   validaMovTorrePreta(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-
-    // For (X,0)
-    for(let co = 1; co <= 8; co++){
-      const colunaFor = String.fromCharCode(colunaOriginal + co);
-      const casaFor = colunaFor + fileiraOriginal
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if(this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-
-      break;
-    }
-
-    // For (-X,0)
-    for(let co = -1; co >= -8; co--){
-      const colunaFor = String.fromCharCode(colunaOriginal + co);
-      const casaFor = colunaFor + fileiraOriginal
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if(this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-
-      break;
-    }
-
-    // For (0,Y)
-    for(let li = 1; li <= 8; li++){
-      const fileiraFor = fileiraOriginal + li;
-      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if(this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (0,-Y)
-    for(let li = 1; li <= 8; li++){
-      const fileiraFor = fileiraOriginal - li;
-      const casaFor = String.fromCharCode(colunaOriginal) + fileiraFor;
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if(this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    return movimentos;
+    return Torre.getMovValidos(CorDaPeca.pretas, casaOriginal, this.estadoTabuleiro)
   }
 
   validaMovBispoBranco(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-
-    // For (X,Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal + diag);
-      const fileiraFor = fileiraOriginal + diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if (this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (-X,Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal - diag);
-      const fileiraFor = fileiraOriginal + diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if (this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (X,-Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal + diag);
-      const fileiraFor = fileiraOriginal - diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if (this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (-X,-Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal - diag);
-      const fileiraFor = fileiraOriginal - diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaBranca(casaFor)){
-        if (this.casaPossuiPecaPreta(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    return movimentos;
+    return Bispo.getMovValidos(CorDaPeca.brancas, casaOriginal, this.estadoTabuleiro);
   }
 
   validaMovBispoPreto(casaOriginal: string): string[]{
-    const movimentos = [];
-    const colunaOriginal =  casaOriginal.charCodeAt(0);
-    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
-
-    // For (X,Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal + diag);
-      const fileiraFor = fileiraOriginal + diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if (this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (-X,Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal - diag);
-      const fileiraFor = fileiraOriginal + diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if (this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (X,-Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal + diag);
-      const fileiraFor = fileiraOriginal - diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if (this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    // For (-X,-Y)
-    for(let diag = 1; diag <= 8; diag++){
-      const colunaFor = String.fromCharCode(colunaOriginal - diag);
-      const fileiraFor = fileiraOriginal - diag;
-      const casaFor = colunaFor + fileiraFor
-
-      if(this.casaExiste(casaFor) && !this.casaPossuiPecaPreta(casaFor)){
-        if (this.casaPossuiPecaBranca(casaFor)){
-          movimentos.push(casaFor);
-          break;
-        }
-        
-        movimentos.push(casaFor);
-        continue;
-      }
-        
-      break;
-    }
-
-    return movimentos;
+    return Bispo.getMovValidos(CorDaPeca.pretas, casaOriginal, this.estadoTabuleiro);
   }
 
   validaMovRainhaBranca(casaOriginal: string): string[]{
-    const movimentos = [];
-
-    for(const movimento of this.validaMovBispoBranco(casaOriginal)){
-      movimentos.push(movimento);
-    }
-
-    for(const movimento of this.validaMovTorreBranca(casaOriginal)){
-      movimentos.push(movimento);
-    }
-
-    return movimentos;
+    return Rainha.getMovValidos(CorDaPeca.brancas, casaOriginal, this.estadoTabuleiro);
   }
 
   validaMovRainhaPreta(casaOriginal: string): string[]{
-    const movimentos = [];
-
-    for(const movimento of this.validaMovBispoPreto(casaOriginal)){
-      movimentos.push(movimento);
-    }
-
-    for(const movimento of this.validaMovTorrePreta(casaOriginal)){
-      movimentos.push(movimento);
-    }
-
-    return movimentos;
+    return Rainha.getMovValidos(CorDaPeca.pretas, casaOriginal, this.estadoTabuleiro);
   }
 
   validaMovReiBranco(casaOriginal: string): string[]{
@@ -793,16 +432,38 @@ export class TabuleiroComponent {
       const casaDestino = colunaFor + fileiraFor;
 
       const ehValido = this.casaExiste(casaDestino) && !this.casaPossuiPecaBranca(casaDestino);
-      //const ehSeguro = this.validaSegurancaReiBrancoByCasa(casaDestino);
+      const ehSeguro = this.validaSegurancaReiBrancoByCasa(casaDestino);
 
-      //if(ehValido && ehSeguro){
-      if(ehValido){
+      if(ehValido && ehSeguro){
         movimentos.push(casaDestino);
       }
 
     }
 
     return movimentos;
+  }
+
+  validaSegurancaReiBrancoByCasa(casaOriginal: string): boolean {
+    const colunaOriginal =  casaOriginal.charCodeAt(0);
+    const fileiraOriginal =  parseInt(casaOriginal.charAt(1));
+    
+    // Valida Cavalo
+    const casasCavalo: [number, number][] = [
+      [2, 1], [2, -1], [-2, 1], [-2, -1],
+      [1, 2], [1, -2], [-1, 2], [-1, -2]
+    ];
+
+    for (const [variavelColuna, variavelFileira] of casasCavalo){
+      const colunaDestino = String.fromCharCode(colunaOriginal + variavelColuna);
+      const fileiraDestino = (fileiraOriginal + variavelFileira).toString();
+
+
+      if(this.casaExiste(colunaDestino + fileiraDestino) && this.retornoPecaPorCasa(colunaDestino + fileiraDestino) == 'n'){
+        return false;
+      }
+    }
+    
+    return true;
   }
 
 }

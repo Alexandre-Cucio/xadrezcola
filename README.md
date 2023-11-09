@@ -8,9 +8,9 @@ Disponibilizar um meio de ensino de Xadrez para crianças que seja independente 
 
 ## Objetivos específicos
 
-- Armazenar diferentes dados de jogadas de Xadrez;
-- Desenvolver uma I.A. que identifique, classifique e responda diferentes jogadas de Xadrez;
-- Apresentar feedback didático ao final de toda partida realizada.
+- Disponibilizar acesso ao Jogo de xadrez por meio de uma aplicação web;
+- Ensinar ao usuário o básico do jogo de Xadrez;
+- Fornecer ao usuário feedback de suas jogadas de uma maneira instrutiva e simples.
 
 ## Estrutura
 
